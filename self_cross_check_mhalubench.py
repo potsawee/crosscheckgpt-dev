@@ -22,11 +22,12 @@ def main(
     # LLM for evidence generation (selfcheck & crosscheck-explicit)
     evidence_llms = ["avsalmonn", "llamavid", "valley", "chat_univi", "llava1.5_7b",
                      "videollama", "instructblip", "mplug_owl2", "videollava"]
-    outputs = []
+
+    outputs = []        
     for evidence_llm in evidence_llms:
+        print(f"LLM={llm_evaluated}, Evidence={evidence_llm}")
         with open(f"mhalubench/Passages/{evidence_llm}_mhalubench_passages.json", "r") as f:
             passages = json.load(f)
-        
         for i in tqdm(range(200)): # just the first 200 instances:
             assert onebest[i]['image_name'] == passages[i]['image_name']
             text = onebest[i]['response'] # str
@@ -47,9 +48,9 @@ def main(
                 'method': 'llm-prompt-mistral'
             })
 
-        with open(f'outputs/mhalubench/{llm_evaluated}_{evidence_llm}.json', 'w') as fout:
-            json.dump(outputs , fout)
-        print(f"completed: {llm_evaluated}-{evidence_llm}")
+    with open(f'outputs/mhalubench_batch1/{llm_evaluated}.json', 'w') as fout:
+        json.dump(outputs , fout)
+    print(f"completed: {llm_evaluated}")
             
 def add_arguments(parser):
     '''Build Argument Parser'''
